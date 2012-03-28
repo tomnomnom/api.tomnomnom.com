@@ -1,0 +1,21 @@
+# API
+
+Work in progress API framework type thing.
+
+## Output formats
+
+### JSON
+* Straight json\_encode() of response
+
+### JSONP
+* json\_encode() of response, wrapped in function name
+
+### HTML
+* Hash table -> <dl>
+* Arrays -> <ul>
+* URLs get parsed into <a>s
+
+### XML
+* Hash table keys -> tag name
+* Array -> multiple tags of same name
+

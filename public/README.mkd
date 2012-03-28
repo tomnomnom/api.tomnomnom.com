@@ -1,0 +1,3 @@
+# Public directory
+
+Web accessible files.
