@@ -13,6 +13,7 @@ class Request {
   }
 
   protected function parseAcceptType($rawType){
+    $rawType = trim($rawType);
     $rawParams = explode(';', $rawType);
     $type = array_shift($rawParams);
 
@@ -22,6 +23,8 @@ class Request {
     $params = [];
     foreach ($rawParams as $rawParam){
       list($key, $value) = explode('=', $rawParam);
+      $key = trim($key);
+      $value = trim($value);
       if ($key == 'q'){
         $q = $value; 
       } else {
@@ -48,7 +51,7 @@ class Request {
       'q'           => $q,
       'raw'         => $rawType,
       'specificity' => $specificity,
-      'params'      => $params
+      'params'      => (object) $params
     ];
   }
 
