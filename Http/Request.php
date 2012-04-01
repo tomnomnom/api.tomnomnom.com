@@ -6,53 +6,64 @@ class Request {
   protected $getVars;
   protected $postData;
 
-  public function __construct($serverVars = array(), $getVars = array(), $postData = array()){
+  public function __construct($serverVars = [], $getVars = [], $postData = []){
     $this->serverVars = $serverVars;
     $this->getVars    = $getVars;
     $this->postData   = $postData;
   }
 
   protected function parseAcceptType($rawType){
-    $type = explode(';', $rawType, 2);
+    $rawParams = explode(';', $rawType);
+    $type = array_shift($rawParams);
 
-    if (isset($type[1])){
-      //TODO: parse param properly
-      $q = substr($type[1], 2);
-    } else {
-      $q = 1;
+    // Default quality factor is '1'
+    $q = 1;
+
+    $params = [];
+    foreach ($rawParams as $rawParam){
+      list($key, $value) = explode('=', $rawParam);
+      if ($key == 'q'){
+        $q = $value; 
+      } else {
+        $params[$key] = $value; 
+      }
     }
 
-    list($type, $subtype) = explode('/', $type[0]);
-    if ($q == 0) return null;
-    return (object) array(
-      'type'    => $type,
-      'subtype' => $subtype,
-      'q'       => $q,
-      'string'  => $type.'/'.$subtype
-    );
+    if ($q == 0){
+      // We specifically don't want this type
+      return null;
+    }
+
+    list($type, $subtype) = explode('/', $type);
+
+    // 0 is the least specific
+    $specificity = 0;
+    if ($type    != '*') $specificity++;
+    if ($subtype != '*') $specificity++;
+    $specificity += sizeOf($params);
+
+    return (object) [
+      'type'        => $type,
+      'subtype'     => $subtype,
+      'q'           => $q,
+      'raw'         => $rawType,
+      'specificity' => $specificity,
+      'params'      => $params
+    ];
   }
 
   public function getAcceptTypes(){
     // See http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
     $rawTypes = $this->getServerVar('HTTP_ACCEPT');
-    if (is_null($rawTypes)) return array();
+    if (is_null($rawTypes)) return [];
 
     $types = explode(',', $rawTypes);
 
     $types = array_filter(
-      array_map(array($this, 'parseAcceptType'), $types)
+      array_map([$this, 'parseAcceptType'], $types)
     );
 
-    $groupedTypes = array();
-    foreach ($types as $type){
-      if (!isset($groupedTypes[$type->q])){
-        $groupedTypes[$type->q] = array();
-      }
-      $groupedTypes[$type->q][] = $type;
-    }
-
-    krsort($groupedTypes);
-    return $groupedTypes;
+    return $types;
   }
 
   protected function getServerVar($key){
