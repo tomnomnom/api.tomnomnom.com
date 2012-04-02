@@ -1,14 +1,9 @@
 <?php
-namespace Resource\Crypto;
+namespace Library\Crypto;
 
-class BlowfishSalt extends \Http\Resource {
-  public function get(){
-    $this->response->setBody([
-      'salt' => $this->makeBlowfishSalt()
-    ]);
-  }
+class Blowfish {
 
-  protected function makeBlowfishSalt($digitCost = 11){
+  public function randomSalt($digitCost = 11){
     if (!CRYPT_BLOWFISH){
       throw new \RuntimeException("Blowfish not available");
     }

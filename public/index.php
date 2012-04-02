@@ -13,7 +13,9 @@ set_exception_handler([$response, 'exceptionHandler']);
 set_error_handler([$response, 'errorHandler']);
 
 $resources = [
-  '#^/crypto/blowfishsalt$#' => '\\Resource\\Crypto\\BlowfishSalt'
+  '#^/$#'                           => '\\Resource\\Index',
+  '#^/index$#'                      => '\\Resource\\Index',
+  '#^/crypto/blowfish/randomsalt$#' => '\\Resource\\Crypto\\Blowfish\\RandomSalt'
 ];
 
 $path = $request->getPath();
