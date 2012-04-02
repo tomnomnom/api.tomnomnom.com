@@ -74,5 +74,26 @@ class RequestTest extends \PHPUnit_Framework_TestCase {
     $this->assertEquals($r->getAcceptTypes()[0]->type, 'text', $invalidMsg);
     $this->assertEquals($r->getAcceptTypes()[0]->subtype, 'html', $invalidMsg);
   }
+
+  public function testGetAcceptType(){
+    $r = new \Http\Request([
+      'HTTP_ACCEPT' => 'application/xml;q=1, application/json;q=0.8, text/xhtml, text/html;q=0.8, text/*;q=0.8'
+    ]);
+    
+    $this->assertEquals(
+      $r->getAcceptType(['application/json', 'text/html']),
+      'application/json', 'Incorrect content-type returned'
+    );
+
+    $this->assertEquals(
+      $r->getAcceptType(['application/json', 'text/xhtml']),
+      'text/xhtml', 'Incorrect content-type returned'
+    );
+
+    $this->assertEquals(
+      $r->getAcceptType(['application/xml', 'text/xhtml']),
+      'application/xml', 'Incorrect content-type returned'
+    );
+  }
 }
 

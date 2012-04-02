@@ -69,6 +69,71 @@ class Request {
     return $types;
   }
 
+  public function getAcceptType($contentTypes = []){
+    $acceptTypes = $this->getAcceptTypes();
+
+    $contentTypes = array_filter(
+      array_map([$this, 'parseAcceptType'], $contentTypes)
+    );
+
+    // Filter $acceptTypes to only include matches
+    $acceptTypes = array_filter($acceptTypes, function($acceptType) use ($contentTypes){
+      foreach ($contentTypes as $contentType){
+        if ($this->matchAcceptType($acceptType, $contentType)){
+          return true;
+        }
+      }
+      return false;
+    });
+
+    // Sort by q then specificity
+    usort($acceptTypes, function($a, $b){
+      if ($a->q > $b->q) return -1;    
+      if ($a->q < $b->q) return 1;    
+
+      if ($a->specificity > $b->specificity) return -1;
+      if ($a->specificity < $b->specificity) return 1;
+
+      return 0;
+    });
+
+    // Take n values from head of list until q or specificity changes
+    $bestAcceptTypes = array();
+    $last = $acceptTypes[0];
+    foreach ($acceptTypes as $acceptType){
+      if ($acceptType->q != $last->q) break;
+      if ($acceptType->specificity != $last->specificity) break;
+
+      $bestAcceptTypes[] = $acceptType;
+      $last = $acceptType;
+    }
+
+    // Iterate over contentTypes and return first one in taken list
+    foreach ($contentTypes as $contentType){
+      foreach ($bestAcceptTypes as $bestAcceptType){
+        if ($this->matchAcceptType($bestAcceptType, $contentType)){
+          return $contentType->raw;
+        }
+      }
+    }
+
+    // No matching type found
+    throw new Exception("Not Acceptable", 406);
+  }
+
+  protected function matchAcceptType($acceptType, $contentType){
+    if ($acceptType->type == '*') return true;     
+    if ($acceptType->type != $contentType->type) return false;
+
+    if ($acceptType->subtype == '*') return true;
+    if ($acceptType->subtype != $contentType->subtype) return false;
+
+    if ($acceptType->params == $contentType->params) return true;
+
+    return false;
+  }
+
+
   protected function getServerVar($key){
     if (!isset($this->serverVars[$key])){
       return null;
