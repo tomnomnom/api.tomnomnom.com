@@ -96,12 +96,10 @@ class RequestTest extends \PHPUnit_Framework_TestCase {
       'application/xml', $invalidMsg
     );
 
-    try {
-      $r->getAcceptType(['audio/basic', 'audio/mp3']);
-      $this->fail("No exception thrown when no matching type found");
-    } catch (\Http\Exception $e){
-      $this->assertEquals($e->getCode(), 406, "No matching type should throw HTTP 406");
-    }
+    $this->assertEquals(
+      $r->getAcceptType(['audio/basic', 'audio/mp3']),
+      null, $invalidMsg
+    );
 
   }
 }
