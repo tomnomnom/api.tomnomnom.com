@@ -153,4 +153,11 @@ class Request {
     return $this->getServerVar('SCRIPT_URL');
   }
 
+  public function getParam($key){
+    if (!isset($this->getVars[$key])){
+      return null;
+    }
+    return $this->getVars[$key];
+  }
+
 }
