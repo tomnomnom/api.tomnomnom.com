@@ -97,6 +97,10 @@ class Request {
       return 0;
     });
 
+    if (sizeOf($acceptTypes) == 0){
+      throw new Exception("Not Acceptable", 406);
+    }
+
     // Take n values from head of list until q or specificity changes
     $bestAcceptTypes = array();
     $last = $acceptTypes[0];
@@ -116,9 +120,9 @@ class Request {
         }
       }
     }
-
-    // No matching type found
-    throw new Exception("Not Acceptable", 406);
+    
+    // Because a match is guaranteed after the filtering step,
+    // this should never be reached.
   }
 
   protected function matchAcceptType($acceptType, $contentType){

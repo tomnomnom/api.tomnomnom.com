@@ -76,24 +76,33 @@ class RequestTest extends \PHPUnit_Framework_TestCase {
   }
 
   public function testGetAcceptType(){
+    $invalidMsg = 'Incorrect content-type returned';
     $r = new \Http\Request([
       'HTTP_ACCEPT' => 'application/xml;q=1, application/json;q=0.8, text/xhtml, text/html;q=0.8, text/*;q=0.8'
     ]);
     
     $this->assertEquals(
       $r->getAcceptType(['application/json', 'text/html']),
-      'application/json', 'Incorrect content-type returned'
+      'application/json', $invalidMsg
     );
 
     $this->assertEquals(
       $r->getAcceptType(['application/json', 'text/xhtml']),
-      'text/xhtml', 'Incorrect content-type returned'
+      'text/xhtml', $invalidMsg
     );
 
     $this->assertEquals(
       $r->getAcceptType(['application/xml', 'text/xhtml']),
-      'application/xml', 'Incorrect content-type returned'
+      'application/xml', $invalidMsg
     );
+
+    try {
+      $r->getAcceptType(['audio/basic', 'audio/mp3']);
+      $this->fail("No exception thrown when no matching type found");
+    } catch (\Http\Exception $e){
+      $this->assertEquals($e->getCode(), 406, "No matching type should throw HTTP 406");
+    }
+
   }
 }
 
