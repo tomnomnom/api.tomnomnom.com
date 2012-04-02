@@ -144,5 +144,27 @@ class Response {
     }
   }
 
+  public function exceptionHandler($e){
+    $code = self::INTERNAL_SERVER_ERROR;
+
+    if ($e instanceof \Http\Exception){
+      $code = $e->getCode();
+    }
+
+    $this->setStatusCode($code);
+    $this->setBody([
+      'error' => $e->getMessage(),
+      'code'  => $code
+    ]);
+    $this->sendHeaders();
+    $this->sendBody();
+    die();
+  }
+
+  public function errorHandler(){
+    //TODO: implement properly
+    throw new \Exception("A code error occured");
+  }
+
 }
 
