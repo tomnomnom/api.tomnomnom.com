@@ -98,7 +98,7 @@ class Request {
     });
 
     if (sizeOf($acceptTypes) == 0){
-      throw new Exception("Not Acceptable", 406);
+      return null;
     }
 
     // Take n values from head of list until q or specificity changes
