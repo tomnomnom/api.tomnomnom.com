@@ -9,9 +9,14 @@ abstract class Resource {
     $this->request  = $request;
     $this->response = $response;
   }
+  
+  public function dispatch(){
+    $this->response->sendHeaders();
 
-  public function getResponse(){
-    return $this->response;
+    $method = $this->request->getMethod();
+    call_user_func([$this, $method]);
+
+    $this->response->sendBody();
   }
 
   public function head(){

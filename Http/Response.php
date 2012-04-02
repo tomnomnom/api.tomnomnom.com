@@ -95,6 +95,8 @@ class Response {
   
   protected $request;
 
+  protected $body;
+
   public function __construct(Request $request){
     $this->request = $request;
   }
@@ -126,6 +128,20 @@ class Response {
      return $this->request->getAcceptType(
       $this->availableContentTypes
     );
+  }
+
+  public function setBody($body){
+    $this->body = $body;
+  }
+
+  public function sendBody(){
+    switch ($this->getContentType()){
+      case 'application/json':
+        echo json_encode($this->body);
+        break;
+      default:
+        $this->setStatusCode(self::NOT_ACCEPTABLE);
+    }
   }
 
 }

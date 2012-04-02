@@ -145,4 +145,12 @@ class Request {
     return $this->serverVars[$key];
   }
 
+  public function getMethod(){
+    return $this->getServerVar('REQUEST_METHOD');
+  }
+
+  public function getPath(){
+    return $this->getServerVar('SCRIPT_URL');
+  }
+
 }
