@@ -6,7 +6,7 @@ class RandomSalt extends \Http\Resource {
     $blowfish = new \Library\Crypto\Blowfish();
     
     $digitCost = (int) $this->request->getParam('digitCost');
-    if (is_null($digitCost)){
+    if (!$digitCost){
       $digitCost = 11;
     }
 
