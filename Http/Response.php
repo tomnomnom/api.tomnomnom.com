@@ -90,7 +90,8 @@ class Response {
   protected $statusCode = self::METHOD_NOT_ALLOWED;
 
   protected $availableContentTypes = array(
-    'application/json',
+    'text/html',
+    'application/json'
   );
   
   protected $request;
@@ -137,11 +138,15 @@ class Response {
   public function sendBody(){
     switch ($this->getContentType()){
       case 'application/json':
-        echo json_encode($this->body);
+        $renderer = new \Renderer\Json();
+        break;
+      case 'text/html':
+        $renderer = new \Renderer\Html();
         break;
       default:
         $this->setStatusCode(self::NOT_ACCEPTABLE);
     }
+    $renderer->render($this->body);
   }
 
   public function exceptionHandler($e){

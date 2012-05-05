@@ -9,6 +9,9 @@ class RetweetCount extends \Http\Resource {
       throw new \RuntimeException("A Tweet ID must be specified as the last URL chunk");
     }
     $tweetId = $pathMatches[1];
+    if (!is_numeric($tweetId)){
+      throw new \RuntimeException("Tweet ID must be numeric");
+    }
 
     $url = "https://twitter.com/statuses/show/{$tweetId}.json";
 

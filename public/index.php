@@ -18,7 +18,7 @@ $resources = [
   '#^/$#'                                 => '\\Resource\\Index',
   '#^/index$#'                            => '\\Resource\\Index',
   '#^/crypto/blowfish/randomsalt$#'       => '\\Resource\\Crypto\\Blowfish\\RandomSalt',
-  '#^/twitter/tweet/retweetcount/(\d*)$#' => '\\Resource\\Twitter\\Tweet\\RetweetCount'
+  '#^/twitter/tweet/retweetcount/(.*)$#'  => '\\Resource\\Twitter\\Tweet\\RetweetCount'
 ];
 
 $path = $request->getPath();
