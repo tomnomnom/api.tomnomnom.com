@@ -115,11 +115,13 @@ class Html extends \Renderer {
                 var href = $(this).attr("href");
                 var tokens = href.match(/:[a-zA-Z_\-]+/g);
 
-                for (var i = 0; i < tokens.length; i++){
-                  var token = tokens[i]; 
-                  var tokenName = token.replace(/:/, "");
-                  var value = $(this).children("input[name="+tokenName+"]").val();
-                  href = href.replace(new RegExp(token), value);
+                if (tokens){
+                  for (var i = 0; i < tokens.length; i++){
+                    var token = tokens[i]; 
+                    var tokenName = token.replace(/:/, "");
+                    var value = $(this).children("input[name="+tokenName+"]").val();
+                    href = href.replace(new RegExp(token), value);
+                  }
                 }
                 document.location = href;
               });
