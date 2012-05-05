@@ -161,9 +161,25 @@ class Response {
     die();
   }
 
-  public function errorHandler(){
-    //TODO: implement properly
-    throw new \Exception("A code error occured");
+  public function errorHandler($errno, $errstr, $errfile, $errline, $errcontext){
+    if (!DEV_MODE){
+      throw new \Exception("A code error occured");
+    }
+
+    $code = self::INTERNAL_SERVER_ERROR;
+
+    $this->setStatusCode($code);
+    $this->setBody([
+      'error'      => 'A code error occured',
+      'code'       => $code,
+      'errno'      => $errno,
+      'errstr'     => $errstr,
+      'errfile'    => $errfile,
+      'errline'    => $errline
+    ]);
+    $this->sendHeaders();
+    $this->sendBody();
+    die();
   }
 
 }

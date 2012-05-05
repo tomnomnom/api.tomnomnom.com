@@ -5,6 +5,7 @@ class Request {
   protected $serverVars;
   protected $getVars;
   protected $postData;
+  protected $pathMatches;
 
   public function __construct($serverVars = [], $getVars = [], $postData = []){
     $this->serverVars = $serverVars;
@@ -158,6 +159,14 @@ class Request {
       return null;
     }
     return $this->getVars[$key];
+  }
+
+  public function setPathMatches(Array $matches){
+    $this->pathMatches = $matches;
+  }
+
+  public function getPathMatches(){
+    return $this->pathMatches;
   }
 
 }
