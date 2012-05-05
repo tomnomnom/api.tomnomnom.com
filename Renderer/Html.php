@@ -100,34 +100,6 @@ class Html extends \Renderer {
             dl dd { margin-left: 1em; margin-bottom: 0.5em; }
           </style>
 
-          <script>
-            $(function(){
-              $("a").each(function(){
-                var linkHtml = $(this).text();
-                linkHtml = linkHtml.replace(
-                  /:([a-zA-Z_\-]+)/g,
-                  "<input type=\"text\" name=\"$1\" value=\"$1\"/>"
-                );
-                $(this).html(linkHtml);
-              });
-              $("a").click(function(event){
-                event.preventDefault(); 
-                var href = $(this).attr("href");
-                var tokens = href.match(/:[a-zA-Z_\-]+/g);
-
-                if (tokens){
-                  for (var i = 0; i < tokens.length; i++){
-                    var token = tokens[i]; 
-                    var tokenName = token.replace(/:/, "");
-                    var value = $(this).children("input[name="+tokenName+"]").val();
-                    href = href.replace(new RegExp(token), value);
-                  }
-                }
-                document.location = href;
-              });
-            });
-          </script>
-
         </head>
         <body> 
     ';
