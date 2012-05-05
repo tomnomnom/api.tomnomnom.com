@@ -5,7 +5,8 @@ class Index extends \Http\Resource {
   public function get(){
     $this->response->setBody([
       'resources' => [
-        '/crypto/blowfish/randomsalt'
+        '/crypto/blowfish/randomsalt',
+        '/twitter/tweet/retweetcount/:tweetId'
       ]
     ]);
   }
