@@ -21,10 +21,12 @@ class Blowfish {
     $blowfishPrefix = '$2a$';
 
     $saltLength = 22;
-    $saltAlphabet = array('.', '/')
-                  + range(0, 9)
-                  + range('A', 'Z')
-                  + range('a', 'z');
+    $saltAlphabet = array_merge(
+      array('.', '/'),
+      range(0, 9),
+      range('A', 'Z'),
+      range('a', 'z')
+    );
 
     $randomChar = function() use($saltAlphabet){
       return $saltAlphabet[array_rand($saltAlphabet)];
@@ -38,3 +40,4 @@ class Blowfish {
     return $blowfishPrefix.$digitCost.'$'.$salt;
   }
 }
+
